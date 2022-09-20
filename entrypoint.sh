@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
-
+echo "THIS IS RUNNING"
 if [[ -z "${BUILDKITE_API_ACCESS_TOKEN:-}" ]]; then
   echo "You must set the BUILDKITE_API_ACCESS_TOKEN environment variable (e.g. BUILDKITE_API_ACCESS_TOKEN = \"xyz\")"
   exit 1
@@ -30,6 +30,7 @@ JSON=$(
     --arg MESSAGE "$MESSAGE" \
     --arg NAME    "$NAME" \
     --arg EMAIL   "$EMAIL" \
+    --arg ENV   "$ENVIRONMENT" \
     '{
       "commit": $COMMIT,
       "branch": $BRANCH,
@@ -38,7 +39,7 @@ JSON=$(
         "name": $NAME,
         "email": $EMAIL
       }
-    }'
+    }, { "env": $ENV }'
 )
 
 # Merge in the build environment variables, if they specified any
